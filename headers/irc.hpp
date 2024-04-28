@@ -1,0 +1,6 @@
+#pragma once
+
+#define C_ESTABLISHING_CONNECTION 1
+#define C_READ_REQUEST 2
+#define C_RESPONSE_TO_REQUEST 3
+#define C_CLOSE_CONNECTION 4
