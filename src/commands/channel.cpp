@@ -2,7 +2,7 @@
 
 Channel::Channel(){}
 
-Channel::Channel(std::string &channelName, Client cl)
+Channel::Channel(std::string &channelName, Client *cl)
 {
 	_name = channelName;
 	_members.push_back(cl);
@@ -11,5 +11,5 @@ Channel::Channel(std::string &channelName, Client cl)
 Channel::~Channel(){}
 void Channel::update_onlinemembers()
 {
-	ownr_mam = _members.size();
+	_onlinemembers = _members.size();
 }

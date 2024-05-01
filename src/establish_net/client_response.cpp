@@ -3,22 +3,13 @@
 #include <sys/socket.h>
 
 
-// void Server::handleReadRequest()
-// {
-//    const int bufferSize = 1024;
-//    char buffer[bufferSize];
-
-   
-
-//    if (ssize_t bytesRead = recv(server_fd, buffer, bufferSize, 0))
-//    {
-//         std::cout << "------>" << buffer << std::endl;
-//         // std::cerr << "Error reciving data from client" << std::endl;
-//    }
-
-// }
-
-void	Server::clientResponse() 
+void Server::commands(request& req, Client& client)
 {
-    
+    if (req.arg[0] == "PRIVMSG")
+    {
+        (void)client;
+        std::cout << req.arg[0] << std::endl;
+        std::cout << req.arg[1] << std::endl;
+        std::cout << req.arg[2] << std::endl;
+    }
 }
