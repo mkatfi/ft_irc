@@ -5,7 +5,8 @@
 
 void Server::commands(request& req, Client& client)
 {
-    if (req.arg[0] == "PRIVMSG")
+    
+    if (req.cmd == "PRIVMSG")
     {
         (void)client;
         std::cout << req.arg[0] << std::endl;

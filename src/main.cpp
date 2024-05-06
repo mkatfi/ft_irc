@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkatfi <mkatfi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 17:29:06 by oryadi            #+#    #+#             */
-/*   Updated: 2024/05/01 17:03:16 by mkatfi           ###   ########.fr       */
+/*   Updated: 2024/04/28 23:54:16 by hchaguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include "../headers/server.hpp"
-
-// extern std::map<std::string, Channel *> channels;
 
 int main(int argc, char **argv) {
 	if (argc != 3) {

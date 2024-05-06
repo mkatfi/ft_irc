@@ -16,41 +16,122 @@
 // */
 
 #include "../../headers/server.hpp"
+#include <cstddef>
+#include <linux/limits.h>
 
+int Server::searchForDestination(request& req)
+{
+    int client_dest = 0;
+    std::map<int, Client>::iterator it;
+    std::map<int, Client>::iterator it1;
+
+    for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (it->second.nickName == req.arg[0])
+            client_dest = it->first;
+        return (client_dest);
+    }
+    return (0);
+}
+
+void Server::sendMessageToClient(request& req, Client& cli, int client_dest)
+{
+    std::string msg;
+    std::string str;
+
+    if (searchForDestination(req) == 0)
+        send_message(cli.socket_fd, ERR_NOSUCHNICK(req.arg[0]));
+    else
+    {
+        for (size_t i = 1; i < req.arg.size(); i++)
+            str += req.arg[i] + " ";
+
+        msg = ":" + cli.nickName + " PRIVMSG " + req.arg[0] + " :" + str + "\r\n";
+        send(client_dest, msg.c_str(), msg.size(), 0);
+    }
+}
 
 int Server::getAuthentified(Client& cli, request& req)
 {
-    static int count;
+    if (req.cmd == "PRIVMSG")
+    {
+        if (req.arg[0][0] == '#')
+        {
+            sendMSGToChannel(cli, req);
+        }
+        else
+        {
+            int client_dest;
 
-    if (req.cmd == "PASS" || req.cmd == "pass")
-    {
-        count = 1;
-        pass(cli, req, &count);
+            client_dest = searchForDestination(req);
+            sendMessageToClient(req, cli, client_dest);
+        }
     }
-    else if ((req.cmd == "NICK" || req.cmd == "nick") && count == 1)
+    else if (req.cmd == "CAP")
     {
-        count = 2;
-        Nick(cli, req, &count);
+        send_message(cli.socket_fd, "*");
     }
-    else if ((req.cmd == "USER" || req.cmd == "user") && count == 2)
+    else if (req.cmd == "WHOIS")
     {
-        count = 3;
-        user(cli, req, &count);
+        send_message(cli.socket_fd, RPL_ENDOFWHOIS(cli.nickName));
     }
-    else if (req.cmd == "./JOIN" || req.cmd == "./join")
+    else if (req.cmd == "PING")
+    {
+        send_message(cli.socket_fd, "irc.server.com");
+    }
+    else if (req.cmd == "MODE")
+    {
+        Mode(cli,req);
+    }
+    else if (req.cmd == "join" || req.cmd == "JOIN")
     {
         join(cli, req);
     }
-    else if (req.cmd == "./KICK" || req.cmd == "./kick")
-    {
-        kick(cli, req);
-    }
-    else if (req.cmd == "./INVITE" || req.cmd == "./invite")
+    else if (req.cmd == "INVITE")
     {
         invite(cli, req);
     }
+    else if (req.cmd == "KICK")
+    {
+        kick(cli, req);
+    }
+    else if (req.cmd == "TOPIC")
+    {
+        Topic(cli, req);
+    }
+    else if ((req.cmd == "PASS" || req.cmd == "pass") && cli.count == 0)
+    {
+        cli.count = 1;
+        pass(cli, req);
+    }
+    else if ((req.cmd == "NICK" || req.cmd == "nick") && cli.count == 1)
+    {
+        cli.count = 2;
+        Nick(cli, req);
+    }
+    else if ((req.cmd == "USER" || req.cmd == "user") && cli.count == 2)
+    {
+        cli.count = 3;
+        user(cli, req);
+    }
+	else if (req.cmd == "KAMEN" || req.cmd == "kamen")
+	{
+		bot(cli, req);
+	}
+    // else if (req.cmd == "KICK" || req.cmd == "kick")
+    // {
+    //     kick(cli, req);
+    // }
+    // else if (req.cmd == "INVITE" || req.cmd == "invite")
+    // {
+    //     invite(cli, req);
+    // }
+    // else if (req.cmd == "TOPIC" || req.cmd == "topic")
+    // {
+    //     Topic(cli, req);
+    // }
     else
         std::cout << req.cmd << " not a command" << std::endl;
-    std::cout << req.cmd << "\n";
-    return (count);
+
+    return (cli.count);
 }

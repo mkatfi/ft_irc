@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   awaiting_traffic.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkatfi <mkatfi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 00:20:44 by hchaguer          #+#    #+#             */
-/*   Updated: 2024/05/01 20:35:16 by mkatfi           ###   ########.fr       */
+/*   Updated: 2024/05/02 23:18:40 by hchaguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <sstream>
 #include <string>
 
-void acceptIncomingConnection(std::map<int, Client> &clients, fd_set &totalfds, int server_fd)
+void	acceptIncomingConnection(std::map<int, Client> &clients, fd_set &totalfds, int server_fd)
 {
 	sockaddr client_s;
 
@@ -28,7 +28,7 @@ void acceptIncomingConnection(std::map<int, Client> &clients, fd_set &totalfds, 
 
 	// if (newfd < 0) throw std::runtime_error("Systemcall `accept` failed.");
 
-	std::cout << newfd << " connected..." << std::endl;
+	std::cout << "\033[1;32mClient : " << newfd << " connected...\033[0m" << std::endl;
 
 	FD_SET(newfd, &totalfds);
 
@@ -39,7 +39,7 @@ void acceptIncomingConnection(std::map<int, Client> &clients, fd_set &totalfds, 
 	clients.insert(std::make_pair(newfd, client));
 }
 
-void Server::clearClients(std::vector<int> BeRemoved, fd_set &totalfds)
+void	Server::clearClients(std::vector<int> BeRemoved, fd_set &totalfds)
 {
 	for (std::vector<int>::iterator it = BeRemoved.begin(); it != BeRemoved.end(); it++)
 	{
@@ -53,32 +53,33 @@ void Server::clearClients(std::vector<int> BeRemoved, fd_set &totalfds)
 	}
 }
 
-void Server::handleReadRequest(Client &client)
+void    Server::handleReadRequest(Client &client)
 {
-	char buf[1024];
+    char buf[1024];
 	request req;
 
 	std::memset(buf, 0, sizeof(buf));
-	int bytes_received = recv(client.socket_fd, buf, sizeof(buf), 0);
+    int bytes_received = recv(client.socket_fd, buf, sizeof(buf), 0);
 
 	if (bytes_received == -1)
 	{
 		std::cerr << "error receving data from client" << std::endl;
 	}
-	if (bytes_received > 0)
+    if (bytes_received > 0)
 	{
-		buf[bytes_received] = '\0';
+        buf[bytes_received] = '\0';
 		std::stringstream iss(buf);
 		std::string line;
 		iss >> req.cmd;
-
+		
 		while (iss >> line)
 		{
 			req.arg.push_back(line);
 		}
-	}
+    }
 	if (getAuthentified(client, req) == 3)
 	{
+		
 		if (client.authenticated == false)
 		{
 			send_message(client.socket_fd, RPL_WELCOME(client.nickName));
@@ -87,13 +88,12 @@ void Server::handleReadRequest(Client &client)
 			send_message(client.socket_fd, RPL_MYINFO(client.nickName, client.serverName));
 			std::cout << client.nickName << " Welcome to irc server!" << std::endl;
 			client.authenticated = true;
+			// client.count = 0;
 		}
-
-		// commands(req, client);
 	}
 }
 
-void Server::awaitingTraffic()
+void	Server::awaitingTraffic()
 {
 	fd_set totalfds;
 	fd_set readfds;
@@ -103,30 +103,27 @@ void Server::awaitingTraffic()
 
 	FD_SET(server_fd, &totalfds);
 
-	while (true)
-	{
+	while(true) {
 
 		readfds = writefds = totalfds;
 
-		int res = select(FD_SETSIZE, &readfds, &writefds, NULL, NULL);
+		int	res = select(FD_SETSIZE, &readfds, &writefds, NULL, NULL);
 
 		// if (res < 0) throw std::runtime_error("Systemcall `select()` failed.");
 
-		if (!res)
-			continue;
+		if (!res) continue ;
 
-		if (FD_ISSET(server_fd, &readfds))
-			acceptIncomingConnection(this->clients, totalfds, server_fd);
+		if (FD_ISSET(server_fd, &readfds)) acceptIncomingConnection(this->clients, totalfds, server_fd);
 
 		std::vector<int> clientsReadyToBeRemoved;
 
 		for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); it++)
 		{
-			if (it->second.step == C_CLOSE_CONNECTION)
-				clientsReadyToBeRemoved.push_back(it->first);
-			else if (FD_ISSET(it->first, &readfds)) // function of handling multiple file descriptors or sockets
+			if(it->second.step == C_CLOSE_CONNECTION) clientsReadyToBeRemoved.push_back(it->first);
+			else if (FD_ISSET(it->first, &readfds))  // function of handling multiple file descriptors or sockets
 			{
 				handleReadRequest(it->second);
+				
 			}
 			// else if (FD_ISSET(it->first, &writefds)) handleResponseRequest(it->second);
 		}

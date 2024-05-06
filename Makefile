@@ -11,6 +11,7 @@ SRCS = src/main.cpp src/establish_net/import_config.cpp \
 		src/establish_net/Authentification.cpp \
 		src/commands/channel.cpp \
 		src/commands/join.cpp \
+		src/commands/bot.cpp \
 
 HEADERS = headers/server.hpp headers/client.hpp
 

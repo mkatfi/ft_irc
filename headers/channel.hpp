@@ -15,9 +15,9 @@ class   Channel {
         std::string _topic;
         bool    hasPassword;
         int _onlinemembers;
+        bool _t;
 
         std::vector<Client *> _members;
-
         Client* admin;
 
         Channel();
@@ -25,8 +25,8 @@ class   Channel {
         ~Channel();
         // void    removeMember(const std::string& nickname);
         void update_onlinemembers();
-
-
+        void set_topic(std::string top);
+        std::string get_topic();
 };
 
 #endif
