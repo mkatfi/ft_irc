@@ -6,7 +6,7 @@
 /*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 16:47:59 by hchaguer          #+#    #+#             */
-/*   Updated: 2024/05/02 22:31:12 by hchaguer         ###   ########.fr       */
+/*   Updated: 2024/05/17 23:49:20 by hchaguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ int Server::pass(Client& client, request &p)
     }
     else
     {
-        std::cout << "hello from pass cmd " <<  std::endl;
-        send_message(client.socket_fd, ":localhost 462 " + client.nickName + " :You may not reregister\r\n");
+        send_message(client.socket_fd, "please enter the nickname\r\n");
     }
     return 0;
 }
@@ -65,7 +64,7 @@ void Server::Nick(Client& cli, request &p)
         {
             cli.nickName = p.arg[0];
             clients[cli.socket_fd] = cli;
-            send_message(cli.socket_fd, ":localhost 462 " + cli.nickName + " :You may not reregister\r\n");
+            send_message(cli.socket_fd, "please enter the user\r\n");
         }
     }
 }

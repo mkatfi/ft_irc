@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   import_config.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkatfi <mkatfi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 22:20:28 by oryadi            #+#    #+#             */
-/*   Updated: 2024/04/24 19:43:21 by mkatfi           ###   ########.fr       */
+/*   Updated: 2024/05/15 12:33:28 by hchaguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,3 +34,5 @@ void	Server::importConfig(std::string importedPort, std::string importedPassword
 
 	password = importedPassword;
 }
+
+Server::~Server() {}

@@ -21,7 +21,11 @@ struct request {
 
 	std::string cmd;
 	std::vector<std::string> arg;
-	int statu;
+
+	request () {
+
+		cmd = "";
+	}
 };
 
 class Server {
@@ -35,10 +39,13 @@ class Server {
 		std::map<std::string, Channel*>	channels;
 		sockaddr_in address;
 		std::vector<int> bot_fds;
+		// static bool Signal;
 
 
 	public :
 
+		
+		static void	handler(int signal);
 		void	importConfig(std::string importedPort, std::string importedPassword);
 		void	hostServer();
 		void	awaitingTraffic();
@@ -46,6 +53,7 @@ class Server {
 		void	clearClients(std::vector<int> clientsToBeRemoved, fd_set &totalfds);
 		void	handleResponseRequest(Client &client);
 		void	handleReadRequest(Client &client);
+		~Server();
 
 	/*-------------------------------CPMMAND-----------------------------------------------------*/
 		void send_message(int sockfd, const std::string &message);
@@ -59,10 +67,10 @@ class Server {
 		void user(Client& client, request &p);
 
 		std::string join(Client &client, request &p);
-		// void createChannel(std::string& channel, int fd, Client &t);
-		void createChannel(std::string &channel, Client &t);
-		void joinChannel(std::string &channel, Client &t);
+		void createChannel(std::string &channel, Client &t, request&);
+		void joinChannel(std::string &channel, Client &t, request&);
 		std::string join_message(std::string channel, int fd);
+		bool is_admin(request& req, Client&);
 
 		void commands(request& req, Client& client);
 		int searchForDestination(request& req);
@@ -75,6 +83,11 @@ class Server {
 		void sendMSGToChannel(Client &, request &);
 		void Mode(Client&, request&);
 		void send_all_member(int sockfd, const std::string &message);
+		void send_just_member(const std::string &message, std::string);
 
 		void bot(Client &client, request &p);
+		bool isinvited(Client& cli, request& req);
+		bool checkLimits(request& req, int *user);
+		int joinClient(Client& client, request& p, std::map<std::string, Channel *>::iterator it);
+		bool isAdmin(request& req, Client& cli);
 };

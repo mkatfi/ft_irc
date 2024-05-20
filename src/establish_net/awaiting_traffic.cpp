@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   awaiting_traffic.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oryadi <oryadi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 00:20:44 by hchaguer          #+#    #+#             */
-/*   Updated: 2024/05/02 23:18:40 by hchaguer         ###   ########.fr       */
+/*   Updated: 2024/05/17 16:56:12 by oryadi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/server.hpp"
 #include <cstddef>
+#include <cstdlib>
 #include <sstream>
 #include <string>
 
@@ -26,7 +27,7 @@ void	acceptIncomingConnection(std::map<int, Client> &clients, fd_set &totalfds, 
 	if (newfd == -1)
 		return;
 
-	// if (newfd < 0) throw std::runtime_error("Systemcall `accept` failed.");
+	if (newfd < 0) throw std::runtime_error("Systemcall `accept` failed.");
 
 	std::cout << "\033[1;32mClient : " << newfd << " connected...\033[0m" << std::endl;
 
@@ -59,27 +60,35 @@ void    Server::handleReadRequest(Client &client)
 	request req;
 
 	std::memset(buf, 0, sizeof(buf));
-    int bytes_received = recv(client.socket_fd, buf, sizeof(buf), 0);
+    int bytes_received = recv(client.socket_fd, buf, sizeof(buf) - 1, 0);
 
-	if (bytes_received == -1)
+	if (bytes_received <= 0)
 	{
-		std::cerr << "error receving data from client" << std::endl;
+		std::cout << "\e[0;31mClient " << client.socket_fd << " disconnected " << std::endl;
+		client.step = C_CLOSE_CONNECTION;
+		return;
 	}
     if (bytes_received > 0)
 	{
+		std::string str;
+		static std::string str1;
         buf[bytes_received] = '\0';
-		std::stringstream iss(buf);
+		str1 += buf;
+		size_t pos = str1.find_first_of("\r\n");
+		if (pos != std::string::npos)
+		{
+			str = str1.substr(0, pos);
+			str1.clear();
+		}
+		std::stringstream iss(str);
 		std::string line;
 		iss >> req.cmd;
 		
 		while (iss >> line)
-		{
 			req.arg.push_back(line);
-		}
     }
 	if (getAuthentified(client, req) == 3)
 	{
-		
 		if (client.authenticated == false)
 		{
 			send_message(client.socket_fd, RPL_WELCOME(client.nickName));
@@ -88,16 +97,13 @@ void    Server::handleReadRequest(Client &client)
 			send_message(client.socket_fd, RPL_MYINFO(client.nickName, client.serverName));
 			std::cout << client.nickName << " Welcome to irc server!" << std::endl;
 			client.authenticated = true;
-			// client.count = 0;
 		}
 	}
 }
 
 void	Server::awaitingTraffic()
 {
-	fd_set totalfds;
-	fd_set readfds;
-	fd_set writefds;
+	fd_set totalfds, readfds, writefds;
 
 	FD_ZERO(&totalfds);
 
@@ -109,7 +115,7 @@ void	Server::awaitingTraffic()
 
 		int	res = select(FD_SETSIZE, &readfds, &writefds, NULL, NULL);
 
-		// if (res < 0) throw std::runtime_error("Systemcall `select()` failed.");
+		if (res < 0) throw std::runtime_error("Systemcall `select()` failed.");
 
 		if (!res) continue ;
 
@@ -121,11 +127,7 @@ void	Server::awaitingTraffic()
 		{
 			if(it->second.step == C_CLOSE_CONNECTION) clientsReadyToBeRemoved.push_back(it->first);
 			else if (FD_ISSET(it->first, &readfds))  // function of handling multiple file descriptors or sockets
-			{
 				handleReadRequest(it->second);
-				
-			}
-			// else if (FD_ISSET(it->first, &writefds)) handleResponseRequest(it->second);
 		}
 
 		clearClients(clientsReadyToBeRemoved, totalfds);

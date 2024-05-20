@@ -2,9 +2,8 @@
 #define CHANNEL_HPP
 #pragma once
 
-#include "server.hpp"
 #include <string>
-
+#include "server.hpp"
 
 class   Channel {
 
@@ -13,11 +12,19 @@ class   Channel {
         std::string _name;
         std::string _pass;
         std::string _topic;
+        std::string _password;
+        
+        // int _onlinemembers;
+	    bool inviteOnly;
         bool    hasPassword;
-        int _onlinemembers;
-        bool _t;
+        bool changeTopic;
+        bool isLimit;
+        int maxsize;
+        std::string invited;
+         std::string member_str;
 
         std::vector<Client *> _members;
+        std::vector<Client *> admins;
         Client* admin;
 
         Channel();

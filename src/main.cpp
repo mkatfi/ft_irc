@@ -6,12 +6,14 @@
 /*   By: hchaguer <hchaguer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 17:29:06 by oryadi            #+#    #+#             */
-/*   Updated: 2024/04/28 23:54:16 by hchaguer         ###   ########.fr       */
+/*   Updated: 2024/05/16 22:53:52 by hchaguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <csignal>
 #include <iostream>
 #include "../headers/server.hpp"
+
 
 int main(int argc, char **argv) {
 	if (argc != 3) {
@@ -22,8 +24,9 @@ int main(int argc, char **argv) {
 	}
 
 	Server server;
-
+	
 	try {
+
 		server.importConfig(argv[1], argv[2]);
 		server.hostServer();
 		server.awaitingTraffic();
