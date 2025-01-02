@@ -1,7 +1,7 @@
 
 # ⚡ FT_IRC ⚡
 ![welcome](https://github.com/user-attachments/assets/e7c3d537-f72d-48c4-83d8-62e451b9e8a3)
-Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
+Proudly coded by @mkatfi, @hchaguer, and @oryadi  إرسيييييييييي
 
 ## 💫 Summary
 **ft_IRC** is a project designed to replicate the functionality of an IRC server, allowing users to interact in real-time through text messaging. It follows the Internet Relay Chat (IRC) protocol, implementing both the server-side logic and client-side communication.
@@ -51,9 +51,9 @@ Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
 
 ### 🎁 Some Tips, Graphs, and Other Resources:
 - **Helpful Links:**
-  - To understand IRC: [Chirc (An IRC subject from a Chicago uni)](http://...)
-  - For client/server connections: [Beej's Guide to Network Programming](http://beej.us/guide/bgnet/)
-  - Modern IRC Client Protocol: [IRC Protocol Documentation](http://...)
+  - To understand IRC: [http://...](https://www.youtube.com/watch?v=JpLwB14L2Rk)
+  - For client/server connections: [http://beej.us/guide/bgnet/](https://www.youtube.com/watch?v=UjCDWCeHCzY))
+  - Modern IRC Client Protocol: [http://...](https://modern.ircdocs.horse/)
 
 - **Tips:**
   1. Start with a working client/server socket connection.
@@ -73,7 +73,7 @@ Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
     ```
 
 ### 📫 Contact:
-Feel free to reach out to @tmanolis, @QnYosa, and @marineks for questions or feedback on the project.
+Feel free to reach out to @mkatfi, @hchaguer, and @oryadi for questions or feedback on the project.
 
 ---
 
