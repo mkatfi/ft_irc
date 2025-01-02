@@ -1,5 +1,6 @@
 
 # ⚡ FT_IRC ⚡
+![network](https://github.com/user-attachments/assets/99eb751d-e308-4723-93e2-5bffd7613f19)
 
 Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
 
@@ -8,6 +9,7 @@ Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
 
 ### 🔮 Definition
 "IRC (Internet Relay Chat) is a protocol for real-time text messaging between internet-connected computers created in 1988. It is mainly used for group discussion in chat rooms called 'channels,' although it supports private messages between two users, data transfer, and various server-side and client-side commands."
+![welcome](https://github.com/user-attachments/assets/e7c3d537-f72d-48c4-83d8-62e451b9e8a3)
 
 ### 💾 Subject Requirements
 1. Code the IRC server in **C++98**.
@@ -43,6 +45,8 @@ Proudly coded by @tmanolis, @QnYosa, and @marineks ❤️
 | **Quit**    | Terminates a client’s connection to the server. |
 | **Topic**   | Changes or views the topic of a channel. |
 | **User**    | Specifies a user’s details during the connection. |
+
+![irc-shema](https://github.com/user-attachments/assets/9d141f25-9a13-4541-adc3-fd207ac2ecb1)
 
 ### 🎁 Some Tips, Graphs, and Other Resources:
 - **Helpful Links:**
